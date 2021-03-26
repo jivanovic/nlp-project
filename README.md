@@ -17,6 +17,9 @@ The database also contains additional information such as message senders, group
 This section will be expanded when we implement a number of working classification methods
 and are able to generate results.
 
+## The Report
+A continuously updated report for the project is available in the root directory with the name "report.pdf". 
+
 ## Authors
 Jan Ivanovič,  email:  
 Grega Dvoršak, email: gd4667@student.uni-lj.si
