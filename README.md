@@ -21,5 +21,5 @@ and are able to generate results.
 A continuously updated report for the project is available in the root directory with the name "report.pdf". 
 
 ## Authors
-Jan Ivanovič,  email:  
+Jan Ivanovič,  email: ji4607@student.uni-lj.si
 Grega Dvoršak, email: gd4667@student.uni-lj.si
