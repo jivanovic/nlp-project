@@ -22,7 +22,7 @@ def test_classifier(X_train, y_train, X_test, y_test, classifier):
     accuracy = accuracy_score(y_test, predictions)
     f1 = f1_score(y_test, predictions, average=None, pos_label=None, labels=list_of_labels)
     print("=================== Results ===================")
-    print("            Content Discussion     Greeting     Logistics     Instruction Question     Assignment Question     General Comment     Incomplete/typo     Feedback Discussion Wrap-up     Outside Material     Opening Statement     General Question     Content Question")
+    print("            Content Discussion     Greeting     Logistics     Instruction Question     Assignment Question     General Comment     Incomplete/typo     Feedback Discussion Wrap-up     Outside Material     Opening Statement     General Question     Content Question     Emoticon/Non-verbal     Assignment Instructions     Response")
     print("F1       " + str(f1))
     print("Precision" + str(precision))
     print("Recall   " + str(recall))
@@ -33,6 +33,7 @@ def test_classifier(X_train, y_train, X_test, y_test, classifier):
 
 
 def cv(classifier, X_train, y_train):
+    X_train = X_train.fillna(0)
     print("===============================================")
     classifier_name = str(type(classifier).__name__)
     now = time()

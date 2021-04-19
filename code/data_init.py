@@ -20,7 +20,7 @@ class InitializeData():
             #self.data = pd.read_csv(csv_file, header=0, names=["id", "class", "text"])
             self.data = pd.read_csv(csv_file, quotechar="$", header=0, names=["id", "class", "text"])
             # "Assignment Instructions" "Emoticon/Non-verbal" "Response"
-            self.data = self.data[self.data["class"].isin(["Content Discussion", "Greeting", "Logistics", "Instruction Question", "Assignment Question", "General Comment", "Incomplete/typo", "Feedback", "Discussion Wrap-up", "Outside Material", "Opening Statement", "General Question", "Content Question"])]
+            self.data = self.data[self.data["class"].isin(["Content Discussion", "Greeting", "Logistics", "Instruction Question", "Assignment Question", "General Comment", "Incomplete/typo", "Feedback", "Discussion Wrap-up", "Outside Material", "Opening Statement", "General Question", "Content Question", "Emoticon/Non-verbal", "Assignment Instructions", "Response"])]
             #self.data = self.data[self.data["class"].isin(["positive", "negative", "neutral"])]
         else:
             self.data = pd.read_csv(csv_file, header=0, names=["id", "text"], dtype={"id": "int64", "text": "str"},

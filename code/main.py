@@ -51,13 +51,16 @@ ten = len(df[df["class"] == "Outside Material"])
 eleven = len(df[df["class"] == "Opening Statement"])
 twelve = len(df[df["class"] == "General Question"])
 thirteen = len(df[df["class"] == "Content Question"])
+fourteen = len(df[df["class"] == "Emoticon/Non-verbal"])
+fifteen = len(df[df["class"] == "Assignment Instructions"])
+sixteen = len(df[df["class"] == "Response"])
 #, "General Question", "Content Question"
 dist = [
     graph_objs.Bar(
-        x=["Content Discussion", "Logistics", "Greeting", "Instruction Question", "Assignment Question", "General Comment", "Incomplete/typo", "Feedback", "Discussion Wrap-up", "Outside Material", "Opening Statement", "General Question", "Content Question"],
-        y=[negative, neutral, positive, forth, fifth, six, seven, eight, ten, eleven, twelve, thirteen]
+        x=["Content Discussion", "Logistics", "Greeting", "Instruction Question", "Assignment Question", "General Comment", "Incomplete/typo", "Feedback", "Discussion Wrap-up", "Outside Material", "Opening Statement", "General Question", "Content Question", "Emoticon/Non-verbal", "Assignment Instructions", "Response"],
+        y=[negative, neutral, positive, forth, fifth, six, seven, eight, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen]
 )]
-plotly.offline.iplot({"data": dist, "layout": graph_objs.Layout(title="Distribution in dataset")})
+plotly.offline.plot({"data": dist, "layout": graph_objs.Layout(title="Distribution in dataset")})
 
 
 """
@@ -69,11 +72,13 @@ random.seed(seed)
 
 # NAIVE BAYES
 X_train, X_test, y_train, y_test = train_test_split(data_model.iloc[:, 1:], data_model.iloc[:, 0], train_size=0.7, stratify=data_model.iloc[:, 0], random_state=seed)
+X_train = X_train.fillna(0)
 precision, recall, accuracy, f1 = test_classifier(X_train, y_train, X_test, y_test, BernoulliNB())
 nb_acc = cv(BernoulliNB(),data_model.iloc[:, 1:], data_model.iloc[:, 0])
 
 # RANDOM FOREST
 X_train, X_test, y_train, y_test = train_test_split(data_model.iloc[:, 1:], data_model.iloc[:, 0], train_size=0.7, stratify=data_model.iloc[:, 0], random_state=seed)
+X_train = X_train.fillna(0)
 precision, recall, accuracy, f1 = test_classifier(X_train, y_train, X_test, y_test, RandomForestClassifier(n_estimators=403, n_jobs=-1, random_state=seed))
 rf_acc = cv(RandomForestClassifier(n_estimators=403, n_jobs=-1, random_state=seed), data_model.iloc[:, 1:], data_model.iloc[:, 0])
 
