@@ -4,6 +4,7 @@ import tensorflow as tf
 from sklearn import preprocessing
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
+from tensorflow.python.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
 from tqdm import tqdm
 from transformers import BertTokenizer, TFDistilBertForSequenceClassification
 import matplotlib.pyplot as plt
@@ -84,9 +85,20 @@ optimizer = tf.keras.optimizers.Adam(0.00000001)
 loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
 
+file_path = "models/weights_best.h5"
+
+reduce_on_plateau = ReduceLROnPlateau(factor=0.1, patience=10)
+checkpoint = ModelCheckpoint(file_path, verbose=1, save_best_only=True)
+
+callbacks_list = [checkpoint, reduce_on_plateau]
+
 bert_model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
-bert_history = bert_model.fit(train_ds, epochs=100, validation_data=val_ds)
+
+# bert_model.load_weights("weights_at_finish.h5")
+bert_history = bert_model.fit(train_ds, epochs=100, validation_data=val_ds, callbacks=callbacks_list)
 plot_loss(bert_history, 'loss')
+
+bert_model.save_weights("models/weights_at_finish.h5")
 
 # results
 results_true = test_ds.unbatch()
