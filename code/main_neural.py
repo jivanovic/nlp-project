@@ -4,13 +4,12 @@ from sklearn import preprocessing
 import numpy as np
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
-import keras
-from tensorflow.keras.optimizers import Adam
 
-from transformers import TFBertForSequenceClassification, BertTokenizer
+from transformers import TFBertForSequenceClassification, BertTokenizer, AutoModelForSequenceClassification, \
+    AutoTokenizer, TFDistilBertForSequenceClassification
 from tqdm import tqdm
 
-data = pd.read_csv('data/data_mapbook.csv', quotechar="$", header=0, names=["id", "class", "text"])
+data = pd.read_csv('data/data_mapbook.csv', quotechar="$", header=0, names=["id", "class", "text"], usecols=[1, 2])
 
 # Transform positive/negative values to 1/0s
 label_encoder = preprocessing.LabelEncoder()
@@ -24,8 +23,8 @@ X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.5)
 print("Train dataset shape: {0}, \nTest dataset shape: {1} \nValidation dataset shape: {2}".format(
     X_train.shape, X_test.shape, X_val.shape))
 
-bert_model = TFBertForSequenceClassification.from_pretrained("bert-base-cased")
-bert_tokenizer = BertTokenizer.from_pretrained("bert-base-cased")
+bert_model = TFDistilBertForSequenceClassification.from_pretrained("sampathkethineedi/industry-classification")
+bert_tokenizer = BertTokenizer.from_pretrained("sampathkethineedi/industry-classification")
 
 pad_token = 0
 pad_token_segment_id = 0
@@ -36,7 +35,7 @@ def convert_to_input(text):
     input_ids, attention_masks, token_type_ids = [], [], []
 
     for x in tqdm(text, position=0, leave=True):
-        inputs = bert_tokenizer.encode_plus(x, add_special_tokens=True, max_length=max_length)
+        inputs = bert_tokenizer.encode_plus(x, add_special_tokens=True, max_length=max_length, truncation=True)
 
         i, t = inputs["input_ids"], inputs["token_type_ids"]
         m = [1] * len(i)
@@ -63,10 +62,10 @@ def to_features(input_ids, attention_masks, token_type_ids, y):
     return {"input_ids": input_ids, "attention_mask": attention_masks, "token_type_ids": token_type_ids}, y
 
 
-train_ds = tf.data.Dataset.from_tensor_slices((X_train[0], X_train[1], X_train[2], y_train)).map(to_features)\
+train_ds = tf.data.Dataset.from_tensor_slices((X_train[0], X_train[1], X_train[2], y_train)).map(to_features) \
     .shuffle(100).batch(12).repeat(5)
 val_ds = tf.data.Dataset.from_tensor_slices((X_val[0], X_val[1], X_val[2], y_val)).map(to_features).batch(12)
-test_ds = tf.data.Dataset.from_tensor_slices((X_test[0], X_test[1], X_test[2], y_test)).map(to_features)\
+test_ds = tf.data.Dataset.from_tensor_slices((X_test[0], X_test[1], X_test[2], y_test)).map(to_features) \
     .batch(12)
 
 # learning parameters
@@ -87,7 +86,7 @@ print(f"Model predictions:\n {results.logits}")
 
 results_predicted = np.argmax(results.logits, axis=1)
 
-print(f"F1 score: {f1_score(results_true, results_predicted)}")
+print(f"F1 score: {f1_score(results_true, results_predicted, average='weighted')}")
 print(f"Accuracy score: {accuracy_score(results_true, results_predicted)}")
 
 # save model
