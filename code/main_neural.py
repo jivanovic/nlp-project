@@ -1,13 +1,12 @@
-import tensorflow as tf
-import pandas as pd
-from sklearn import preprocessing
 import numpy as np
+import pandas as pd
+import tensorflow as tf
+from sklearn import preprocessing
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
-
-from transformers import TFBertForSequenceClassification, BertTokenizer, AutoModelForSequenceClassification, \
-    AutoTokenizer, TFDistilBertForSequenceClassification
 from tqdm import tqdm
+from transformers import BertTokenizer, TFDistilBertForSequenceClassification
+import matplotlib.pyplot as plt
 
 data = pd.read_csv('data/data_mapbook.csv', quotechar="$", header=0, names=["id", "class", "text"], usecols=[1, 2])
 
@@ -29,6 +28,18 @@ bert_tokenizer = BertTokenizer.from_pretrained("sampathkethineedi/industry-class
 pad_token = 0
 pad_token_segment_id = 0
 max_length = 256
+
+
+def plot_loss(history, label):
+    # Use a log scale on y-axis to show the wide range of values.
+    plt.semilogy(history.epoch, history.history['loss'],
+                 color='b', label='Train ' + label)
+    plt.semilogy(history.epoch, history.history['val_loss'],
+                 color='b', label='Val ' + label,
+                 linestyle="--")
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.show()
 
 
 def convert_to_input(text):
@@ -75,6 +86,7 @@ metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
 
 bert_model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
 bert_history = bert_model.fit(train_ds, epochs=100, validation_data=val_ds)
+plot_loss(bert_history, 'loss')
 
 # results
 results_true = test_ds.unbatch()
