@@ -28,14 +28,14 @@ bert_tokenizer = BertTokenizer.from_pretrained("sampathkethineedi/industry-class
 
 pad_token = 0
 pad_token_segment_id = 0
-max_length = 128
+max_length = 256
 
 
 def convert_to_input(text):
     input_ids, attention_masks, token_type_ids = [], [], []
 
     for x in tqdm(text, position=0, leave=True):
-        inputs = bert_tokenizer.encode_plus(x, add_special_tokens=True, max_length=max_length, truncation=True)
+        inputs = bert_tokenizer.encode_plus(x, add_special_tokens=True, max_length=max_length)
 
         i, t = inputs["input_ids"], inputs["token_type_ids"]
         m = [1] * len(i)
@@ -74,7 +74,7 @@ loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
 
 bert_model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
-bert_history = bert_model.fit(train_ds, epochs=3, validation_data=val_ds)
+bert_history = bert_model.fit(train_ds, epochs=100, validation_data=val_ds)
 
 # results
 results_true = test_ds.unbatch()
