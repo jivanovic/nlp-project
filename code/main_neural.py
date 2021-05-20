@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from sklearn import preprocessing
-from sklearn.metrics import f1_score, accuracy_score
+from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint
 from tqdm import tqdm
@@ -95,7 +95,7 @@ callbacks_list = [checkpoint, reduce_on_plateau]
 bert_model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
 
 bert_model.load_weights("models/weights_at_finish.h5")
-bert_history = bert_model.fit(train_ds, epochs=100, validation_data=val_ds, callbacks=callbacks_list)
+bert_history = bert_model.fit(train_ds, epochs=10, validation_data=val_ds, callbacks=callbacks_list)
 plot_loss(bert_history, 'loss')
 
 bert_model.save_weights("models/weights_at_finish.h5")
@@ -112,6 +112,8 @@ results_predicted = np.argmax(results.logits, axis=1)
 
 print(f"F1 score: {f1_score(results_true, results_predicted, average='weighted')}")
 print(f"Accuracy score: {accuracy_score(results_true, results_predicted)}")
+print(f"Precision: {precision_score(results_true, results_predicted, average='weighted')}")
+print(f"Recall: {recall_score(results_true, results_predicted, average='weighted')}")
 
 # save model
 bert_model.save_pretrained('models/bert_pretrained.h5')
