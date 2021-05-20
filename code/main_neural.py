@@ -94,7 +94,7 @@ callbacks_list = [checkpoint, reduce_on_plateau]
 
 bert_model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
 
-bert_model.load_weights("weights_at_finish.h5")
+bert_model.load_weights("models/weights_at_finish.h5")
 bert_history = bert_model.fit(train_ds, epochs=100, validation_data=val_ds, callbacks=callbacks_list)
 plot_loss(bert_history, 'loss')
 
