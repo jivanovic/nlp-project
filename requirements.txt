@@ -1,0 +1,13 @@
+plotly~=4.14.3
+sklearn~=0.0
+scikit-learn~=0.24.0
+xgboost~=1.4.0
+pandas~=1.2.0
+openpyxl~=3.0.6
+nltk~=3.6.1
+numpy~=1.19.5
+tensorflow~=2.4.1
+matplotlib~=3.2.2
+tqdm~=4.54.1
+transformers~=4.5.1
+gensim~=3.8.3
