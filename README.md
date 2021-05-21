@@ -20,6 +20,8 @@ https://zenodo.org/record/3237458#.YHwg75MzadY
 The file you need is in the archive glove.twitter.27B.200d.txt.gz; you copy glove.twitter.27B.200d.txt from the archive into the code folder and the classifier should be ready to run.
 For the deep learning method, you can adjust some settings in the main_neural.py. We propose setting the number of epochs to at least 10 as the network usually performs better if that is done. The network was trained on an NVIDIA GeForce GTX 1060 graphics card. The number of epochs can be changed on line 98 in the main_neural.py file. Make sure the weights file weights_at_finish.h5 is in the models directory.
 
+NOTE: If there are any problems, try to checkout the jan-dev branch as the main part of development was done there or contact the authors.
+
 We attempted to implement a custom network in the main_neural_custom.py file but the development was discontinued.
 
 ## The Report
